@@ -21,7 +21,7 @@ if not os.path.exists(logs_directory):
     os.makedirs(logs_directory)
 
 logfile_name = os.path.join(logs_directory, datetime.now().strftime('PySSED-%d%m%Y-%H%M%S.log'))
-logging.basicConfig(filename=logfile_name,level=logging.DEBUG)
+logging.basicConfig(filename=logfile_name,level=logging.INFO)
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)
 logging.getLogger('').addHandler(console)
@@ -41,7 +41,7 @@ try:
     if (speedtest):
         starttime=datetime.now()
         globaltime=starttime
-        logging.info("start:",datetime.now())
+        print("start:",datetime.now())
     from sys import argv                        # Allows command-line arguments
     from sys import exit                        # Allows graceful quitting
     from sys import exc_info                    # Allows graceful error trapping
@@ -191,82 +191,82 @@ def parse_args(cmdargs):
     
     # If no command-line arguments, print usage
     if (len(argv)<=1):
-        print ("Use:")
-        print (__file__,"<search type> [parameters] <processing type> [parameters] [setup file]")
-        print ("<search type> : single, parameters = 'Source name' or 'RA, Dec'")
-        print ("<search type> : list, parameters = 'File with sources or RA/Dec'")
-        print ("<search type> : cone, parameters = RA, Dec, radius (deg)")
-        print ("<search type> : rectangle, parameters = RA, Dec, width, height (deg)")
-        print ("<search type> : box, parameters = RA1, Dec1, RA2, Dec2 (deg)")
-#        print ("<search type> : volume, parameters = RA, Dec, d, r (deg,pc)")
-#        print ("<search type> : criteria, parameters = 'SIMBAD criteria setup file'")
-#        print ("<search type> : complex, parameters = 'Gaia criteria setup file'")
-#        print ("<search type> : nongaia, parameters = 'Non-gaia criteria setup file'")
-        print ("<search type> : uselast")
-        print ("<processing type> : none")
-        print ("<processing type> : simple, parameters = Fe/H, E(B-V), [mass]")
-#        print ("<processing type> : fit, parameters = [priors file]")
-#        print ("<processing type> : binary, parameters = [priors file]")
-        print ("[setup file] : contains additional properties related to surveys and fitting")
+        logging.error("Use:")
+        logging.error(__file__,"<search type> [parameters] <processing type> [parameters] [setup file]")
+        logging.error("<search type> : single, parameters = 'Source name' or 'RA, Dec'")
+        logging.error("<search type> : list, parameters = 'File with sources or RA/Dec'")
+        logging.error("<search type> : cone, parameters = RA, Dec, radius (deg)")
+        logging.error("<search type> : rectangle, parameters = RA, Dec, width, height (deg)")
+        logging.error("<search type> : box, parameters = RA1, Dec1, RA2, Dec2 (deg)")
+#        logging.error("<search type> : volume, parameters = RA, Dec, d, r (deg,pc)")
+#        logging.error("<search type> : criteria, parameters = 'SIMBAD criteria setup file'")
+#        logging.error("<search type> : complex, parameters = 'Gaia criteria setup file'")
+#        logging.error("<search type> : nongaia, parameters = 'Non-gaia criteria setup file'")
+        logging.error("<search type> : uselast")
+        logging.error("<processing type> : none")
+        logging.error("<processing type> : simple, parameters = Fe/H, E(B-V), [mass]")
+#        logging.error("<processing type> : fit, parameters = [priors file]")
+#        logging.error("<processing type> : binary, parameters = [priors file]")
+        logging.error("[setup file] : contains additional properties related to surveys and fitting")
         cmdtype=""
         cmdargs=[]
         proctype=""
         procargs=[]
         error=1
     else:
-        print ("PySSED has been asked to...")
+        logging.info("PySSED has been asked to...")
 
     # Parse search type
     if (len(cmdargs)>1):
         cmdtype=cmdargs[1]
         if (cmdtype=="single"):
-            print ("(1) Process single object:",cmdargs[2])
+            logging.info("(1) Process single object:",cmdargs[2])
             cmdparams=cmdargs[2]
             procargs=cmdargs[3:]
         elif (cmdtype=="list"):
-            print ("(1) Process a list of objects")
+            logging.info("(1) Process a list of objects")
             procargs=cmdargs[3:]
             cmdparams=cmdargs[2]
-            print ("    List of targets in:",cmdparams)
+            logging.info("List of targets in:",cmdparams)
         elif (cmdtype=="cone"):
-            print ("(1) Process a cone search",cmdargs[2],cmdargs[3],cmdargs[4])
+            logging.info("(1) Process a cone search: %s %s %s",cmdargs[2],cmdargs[3],cmdargs[4])
             cmdparams=cmdargs[2:4]
             procargs=cmdargs[5:]
         elif (cmdtype=="rectangle"):
-            print ("(1) Process a rectangle search:",cmdargs[2],cmdargs[3],"-",cmdargs[4],cmdargs[5])
+            logging.info("(1) Process a rectangle search: %s %s %s %s",cmdargs[2],cmdargs[3],"-",cmdargs[4],cmdargs[5])
             cmdparams=cmdargs[2:5]
             procargs=cmdargs[6:]
         elif (cmdtype=="box"):
-            print ("(1) Process a box search:",cmdargs[2],cmdargs[3],"-",cmdargs[4],cmdargs[5])
+            logging.info("(1) Process a box search: %s %s %s %s",cmdargs[2],cmdargs[3],"-",cmdargs[4],cmdargs[5])
             cmdparams=cmdargs[2:5]
             procargs=cmdargs[6:]
         elif (cmdtype=="volume"):
-            print ("(1) Process a volume:",cmdargs[2],cmdargs[3],cmdargs[4],cmdargs[5])
+            logging.info("(1) Process a volume: %s %s %s %s",cmdargs[2],cmdargs[3],cmdargs[4],cmdargs[5])
             cmdparams=cmdargs[2:5]
             procargs=cmdargs[6:]
         elif (cmdtype=="criteria"):
-            print ("(1) Process a set of SIMBAD criteria")
+            logging.info("(1) Process a set of SIMBAD criteria")
             cmdparams=cmdargs[2]
             procargs=cmdargs[3:]
-            print ("    SIMBAD query in:",cmdparams)
+            logging.info("    SIMBAD query in:",cmdparams)
         elif (cmdtype=="complex"):
-            print ("(1) Process a complex Gaia query")
+            logging.info("(1) Process a complex Gaia query")
             cmdparams=cmdargs[2]
             procargs=cmdargs[3:]
-            print ("    Gaia query in:",cmdparams)
+            logging.info("    Gaia query in:",cmdparams)
         elif (cmdtype=="nongaia"):
-            print ("(1) Process a set of objects from a non-Gaia source set")
+            logging.info("(1) Process a set of objects from a non-Gaia source set")
             cmdparams=cmdargs[2]
             procargs=cmdargs[3:]
-            print ("    Setup file:",cmdparams)
+            logging.info("    Setup file:",cmdparams)
         elif (cmdtype=="uselast"):
-            print ("(1) Use the last set of downloaded data")
+            logging.info("(1) Use the last set of downloaded data")
             cmdparams=[]
             procargs=cmdargs[3:]
-            print ("    Setup file:",cmdparams)
+            logging.info("    Setup file:",cmdparams)
         else:
             print_fail ("ERROR! Search type was:"+cmdtype)
-            print ("Expected one of: single, list, cone, rectangle, box, volume, criteria, complex, nongaia, uselast")
+            logging.error("Expected one of: single, list, cone, rectangle, box, volume, criteria, complex, nongaia, uselast")
             cmdtype=""
             cmdparams=[]
             procargs=[]
@@ -275,7 +275,7 @@ def parse_args(cmdargs):
             error=1
     else:
         print_fail ("ERROR! No command type specified")
-        print ("Expected one of: single, list, cone, rectangle, box, volume, criteria, complex, nongaia")
+        logging.critical("Expected one of: single, list, cone, rectangle, box, volume, criteria, complex, nongaia")
         cmdtype=""
         cmdparams=[]
         procargs=[]
@@ -288,22 +288,22 @@ def parse_args(cmdargs):
     if (len(procargs)>0):
         proctype=procargs[0]
         if (proctype=="none"):
-            print ("(2) No processing: only create the SEDs")
+            logging.info("(2) No processing: only create the SEDs")
             if (len(procargs)>1):
                 setupfile=procargs[-1]
             procparams=[]
         elif (proctype=="bb"):
-            print ("(2) Perform a blackbody fit")
+            logging.info("(2) Perform a blackbody fit")
             if (len(procargs)>1):
                 setupfile=procargs[-1]
             procparams=[]
         elif (proctype=="trap"):
-            print ("(2) Perform a trapezoidal fit")
+            logging.info("(2) Perform a trapezoidal fit")
             if (len(procargs)>1):
                 setupfile=procargs[-1]
             procparams=[]
         elif (proctype=="simple"):
-            print ("(2) Perform a simple (fast) fit")
+            logging.info("(2) Perform a simple (fast) fit")
             try:
                 setupfile=float(procargs[-1])
             except:
@@ -312,31 +312,31 @@ def parse_args(cmdargs):
             procparams=procargs[1:3]
         elif (proctype=="fit" or proctype=="binary"):
             if (proctype=="fit"):
-                print ("(2) Perform a full parametric fit")
+                logging.info("(2) Perform a full parametric fit")
             if (proctype=="binary"):
-                print ("(2) Perform a parametric binary fit")
+                logging.info("(2) Perform a parametric binary fit")
             if (len(procargs)>2):
                 setupfile=procargs[-1]
             if (len(procargs)>1):
                 procparams=procargs[1]
             else:
                 procparams="constraints.default"
-            print ("    Using constraints file:",procparams)
+            logging.warning("Using constraints file:",procparams)
         else:
             print_fail ("ERROR! Processing type was: "+procargs[0])
-            print ("Expected one of: none, bb, trap, simple, fit, binary")
+            logging.error("Expected one of: none, bb, trap, simple, fit, binary")
             proctype=""
             procparams=[]
             error=1
     else:
         print_fail ("ERROR! No processing type specified")
-        print ("Expected one of: none, bb, simple, fit, binary")
+        logging.critical("Expected one of: none, bb, simple, fit, binary")
         proctype=""
         procparams=[]
         error=1
         
-    print ("    Using setup file:",setupfile)
-    print ("")
+    logging.info("Using setup file: %s",setupfile)
+    logging.info("")
 
     return cmdtype,cmdparams,proctype,procparams,setupfile,error
     
@@ -379,7 +379,7 @@ def get_model_grid():
     # Load grid of precomputed stellar models
 
     if (verbosity>=20):
-        print ("Getting stellar models")
+        logging.info("Getting stellar models")
     
     # If required, create grid from reduced stellar model list
     recastmodels=int(pyssedsetupdata[pyssedsetupdata[:,0]=="RecomputeModelGrid",1][0])
@@ -390,7 +390,7 @@ def get_model_grid():
     
     modelfile="model-"+modelcode+"-recast.dat"
     if (verbosity>=30):
-        print ("Using model file:", modelfile)
+        logging.info("Using model file: %s", modelfile)
     #modeldata = np.genfromtxt(modelfile, comments="#", names=True, deletechars=" ~!@#$%^&*()=+~\|]}[{';: ?>,<")
     # Although this loads the data twice, it's much quicker than using np.genfromtxt!
     df = pd.read_csv(modelfile,dtype=float,delimiter=" ")
@@ -404,7 +404,7 @@ def get_av_grid():
     # Load extinction grids, like get_model_grid
 
     if (verbosity>=30):
-        print ("Loading extinction grids...")
+        logging.info("Loading extinction grids...")
     # No need to recast models since already run get_model_grid
 
     modelcode=np.array2string(pyssedsetupdata[pyssedsetupdata[:,0]=="ModelCode",1])[2:-2]
@@ -441,10 +441,10 @@ def get_model_list():
     # This takes some time to do, but results in quicker interpolation later
 
     if (verbosity>=5):
-        print ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print ("Recasting model grid [RecomputeModelGrid>0].")
-        print ("Have a coffee break - this may take some time (est. a fraction of an hour per filter).")
-        print ("If this takes too long, try restricting the Model*Hi and Model*Lo parameters in the setup file.")
+        logging.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        logging.info("Recasting model grid [RecomputeModelGrid>0].")
+        logging.info("Have a coffee break - this may take some time (est. a fraction of an hour per filter).")
+        logging.info("If this takes too long, try restricting the Model*Hi and Model*Lo parameters in the setup file.")
 
     # Load list of reduced models and extinction data
     # List of filenames should match those generated in makemodel.py
@@ -472,7 +472,7 @@ def get_model_list():
         modelfile=modelfiles[k]
         recastmodelfile=recastmodelfiles[k]
         if (verbosity>=10):
-            print ("File",k+1,"of",nfiles,": recasting",modelfile,"to",recastmodelfile)
+            logging.info("File",k+1,"of",nfiles,": recasting",modelfile,"to",recastmodelfile)
     
         modelfiledata = np.genfromtxt(modelfile, comments="#", names=True, deletechars=" ~!@#$%^&*()=+~\|]}[{';: ?>,<")
 
@@ -497,12 +497,12 @@ def get_model_list():
         # Iterate parameters onto complete grid
         interp_grid_points = np.array(list(itertools.product(np.unique(modelfiledata['teff']),np.unique(modelfiledata['logg']),np.unique(modelfiledata['metal']),np.unique(modelfiledata['alpha']))))
         if (verbosity>=90):
-            print ("Original grid contains",len(modelfiledata),"points")
-            print ("Complete grid will contain",len(interp_grid_points),"points")
+            logging.info("Original grid contains",len(modelfiledata),"points")
+            logging.info("Complete grid will contain",len(interp_grid_points),"points")
 
         # Set up output data grid
         interp_data_points = np.zeros((len(interp_grid_points[:,0]),len(valueselector)),dtype=float)
-        #print (np.shape(interp_data_points))
+        #logging.info(np.shape(interp_data_points))
         
         # Rescale temperature axis but set rescale=False in interpfn
         # This allows temperature to mostly control the flux, but gives more appropriate weight to log g, [Fe/H] and [alpha/Fe]
@@ -525,7 +525,7 @@ def get_model_list():
                     eta=datetime.now()+(now-start)/(fdone+1e-6)*fremaining
                 except:
                     now = 0; elapsed = 0; remaining = 0
-                print ("File",k+1,"of",nfiles,", filter", i+1, "of", len(valueselector), "[",now,"], elapsed:",int(elapsed)," ETA:",eta)
+                logging.info("File",k+1,"of",nfiles,", filter", i+1, "of", len(valueselector), "[",now,"], elapsed:",int(elapsed)," ETA:",eta)
 
             ts=np.unique(modelfiledata['teff'])
             nts=len(ts)
@@ -538,7 +538,7 @@ def get_model_list():
                 else:
                     maxt = np.where(j+3>=nts,nts-1,j+3)
                 if (verbosity>=80):
-                    print (ts[j])
+                    logging.info(ts[j])
                 snip_params=params[(params[:,0]>=ts[mint]) & (params[:,0]<=ts[maxt])]
                 snip_values=modelfiledata[(params[:,0]>=ts[mint]) & (params[:,0]<=ts[maxt])][list(valueselector)[i]]
                 if (k==0): # for models
@@ -550,7 +550,7 @@ def get_model_list():
                 interp_data_points[interp_grid_points[:,0]==ts[j],i]=np.squeeze(modeldata)
             
         if (verbosity>=30):
-            print ("Done. Saving recast model file.")
+            logging.info("Done. Saving recast model file.")
         with open(modelfile, "r") as f:
             header=f.readline()
         with open(recastmodelfile, "w") as f:
@@ -558,8 +558,8 @@ def get_model_list():
         with open(recastmodelfile, "a") as f:
             np.savetxt(f,np.append(interp_grid_points,interp_data_points,axis=1), fmt='%s', delimiter=' ')
     if (verbosity>=5):
-        print ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    print ("Now run shorten-model.scr")
+        logging.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    logging.info("Now run shorten-model.scr")
     exit()
 
     return
@@ -606,7 +606,7 @@ def get_gaia_obj(cmdparams):
     dr3_obj=""
     maxattempts=int(pyssedsetupdata[pyssedsetupdata[:,0]=="ServerRetries",1][0])
     if (verbosity>=30):
-        print ("Fitting single object")
+        logging.info("Fitting single object")
     
     # Parse input parameters: convert to array and try to extract co-ordinates
     obj=str.split(cmdparams,sep=" ")
@@ -624,17 +624,17 @@ def get_gaia_obj(cmdparams):
             try:
                 dr3_obj=result_table['dr3_source_id'][0]
                 if (verbosity>40):
-                    print ("Gaia DR2 source",obj[1],"is DR3 source",dr3_obj)
+                    logging.info("Gaia DR2 source",obj[1],"is DR3 source",dr3_obj)
             except IndexError:
                 if (verbosity>40):
-                    print_warn ("No Gaia DR3 object")
+                    logging.warning("No Gaia DR3 object")
                 return 0,"No Gaia DR3 counterpart"
                 dr3_obj=0.
         else:
             dr3_obj=obj[1]
             #coords=np.zeros((2,),dtype=float)
             if (verbosity>40):
-                print ("Using Gaia DR3 source",obj[1])
+                logging.info("Using Gaia DR3 source",obj[1])
 
     # Otherwise, if parsable co-ordinates are used, use those
     else:
@@ -645,11 +645,11 @@ def get_gaia_obj(cmdparams):
             if (len(coords)==6):
                 coords=np.array([coords[0]*15.+coords[1]/4.+coords[2]/240.,coords[3]+np.sign(coords[3])*(coords[4]/60.+coords[5]/3600.)])
             if (coords[0]!=-999 and coords[1]!=-999 and verbosity>40):
-                print ("Using co-ordinates: RA",coords[0],"deg, Dec",coords[1],"deg")
+                logging.info("Using co-ordinates: RA",coords[0],"deg, Dec",coords[1],"deg")
         except:
     # and if not, then ask SIMBAD for a position resolution
             if (verbosity>40):
-                print ("Resolving",cmdparams,"using SIMBAD")
+                logging.info("Resolving",cmdparams,"using SIMBAD")
             attempts = 0
             result_table = 0
             while attempts < maxattempts:
@@ -661,7 +661,7 @@ def get_gaia_obj(cmdparams):
                 except:
                     attempts += 1
                     if (verbosity >= 25):
-                        print_warn ("Could not connect to SIMBAD server (attempt "+str(attempts)+" of "+str(maxattempts)+") [Simbad.query_object]")
+                        logging.warning("Could not connect to SIMBAD server (attempt "+str(attempts)+" of "+str(maxattempts)+") [Simbad.query_object]")
                     try: # wait for server to clear
                         time.sleep(attempts**2)
                     except: # if time not installed don't wait
@@ -672,10 +672,10 @@ def get_gaia_obj(cmdparams):
             try:
                 gaiaepoch=float(pyssedsetupdata[pyssedsetupdata[:,0]=="GaiaEpoch",1][0])
                 if (verbosity>=99):
-                    print ("SIMBAD result table:")
-                    print (result_table)
+                    logging.info("SIMBAD result table:")
+                    logging.info(result_table)
                 if (verbosity>60):
-                    print (result_table['RA'][0],result_table['DEC'][0])
+                    logging.info(result_table['RA'][0],result_table['DEC'][0])
                 rac=np.fromstring(result_table['RA'][0],dtype=float,sep=" ")
                 decc=np.fromstring(result_table['DEC'][0],dtype=float,sep=" ")
                 try:
@@ -691,9 +691,9 @@ def get_gaia_obj(cmdparams):
                     pmoffset=[pmra/3.6e6*(gaiaepoch-2000.)/np.cos(coords2000[1]/180*np.pi),pmdec/3.6e6*(gaiaepoch-2000.)]
                     coords=np.add(coords2000,pmoffset)
                     if (verbosity>95):
-                        print ("Epoch 2000 co-ordinates: RA",coords2000[0],"deg, Dec",coords2000[1],"deg")
-                        print ("PM offset: RA",pmoffset[0],"deg, Dec",pmoffset[1],"deg")
-                        print ("Epoch",gaiaepoch,"co-ordinates: RA",coords[0],"deg, Dec",coords[1],"deg")
+                        logging.info("Epoch 2000 co-ordinates: RA",coords2000[0],"deg, Dec",coords2000[1],"deg")
+                        logging.info("PM offset: RA",pmoffset[0],"deg, Dec",pmoffset[1],"deg")
+                        logging.info("Epoch",gaiaepoch,"co-ordinates: RA",coords[0],"deg, Dec",coords[1],"deg")
                 except IndexError as e:
                     print_fail ("Received malformed source co-ordinates. Could not identify source.")
                     return 0,"Source co-ordinates error"
@@ -701,24 +701,24 @@ def get_gaia_obj(cmdparams):
                 print_fail ("Source could not be identfied:"+cmdparams)
                 return 0,"Source could not be identified"
             if (verbosity>40):
-                print ("Using co-ordinates: RA",coords[0],"deg, Dec",coords[1],"deg")
+                logging.info("Using co-ordinates: RA",coords[0],"deg, Dec",coords[1],"deg")
 
         # Now query the Gaia DR3 database for a match
         dr3_obj=query_gaia_coords(coords[0],coords[1])
         if (verbosity>95):
-            print ("Gaia returned:")
-            print (dr3_obj)
+            logging.info("Gaia returned:")
+            logging.info(dr3_obj)
         # If there's a match...
         if (dr3_obj>0):
             if (verbosity>40):
-                print ("Gaia DR3",dr3_obj)
+                logging.info("Gaia DR3",dr3_obj)
         # If there isn't a match, fall back to Hipparcos
         else:
             if (verbosity>40):
-                print ("No Gaia object at that position.")
+                logging.info("No Gaia object at that position.")
 
     #if (verbosity>=40):
-    #    print (dr3_data)
+    #    logging.info(dr3_data)
 
     return dr3_obj,errmsg
     
@@ -726,7 +726,7 @@ def get_gaia_obj(cmdparams):
 def get_gaia_data(dr3_obj):
     query="SELECT * FROM gaiadr3.gaia_source WHERE source_id=" + str(dr3_obj)
     if (verbosity>70):
-        print (query)
+        logging.info(query)
     maxattempts=int(pyssedsetupdata[pyssedsetupdata[:,0]=="ServerRetries",1][0])
     attempts = 0
     while attempts < maxattempts:
@@ -798,37 +798,37 @@ def extract_ra_dec(sourcedata):
         newra=sourcedata['RArad']
         newdec=sourcedata['DErad']
         if (verbosity>=98):
-            print ("Selected co-ordinates from: RArad/DErad")
+            logging.info("Selected co-ordinates from: RArad/DErad")
     except: # Needed for Tycho
         try:
             newra=sourcedata['_RA.icrs']
             newdec=sourcedata['_DE.icrs']
             if (verbosity>=98):
-                print ("Selected co-ordinates from: _RA.icrs/_DE.icrs")
+                logging.info("Selected co-ordinates from: _RA.icrs/_DE.icrs")
         except: # Needed for SDSS
             try:
                 newra=sourcedata['RA_ICRS']
                 newdec=sourcedata['DE_ICRS']
                 if (verbosity>=98):
-                    print ("Selected co-ordinates from: RA_ICRS/DE_ICRS")
+                    logging.info("Selected co-ordinates from: RA_ICRS/DE_ICRS")
             except:
                 try:
                     newra=sourcedata['RAJ2000']
                     newdec=sourcedata['DEJ2000']
                     if (verbosity>=98):
-                        print ("Selected co-ordinates from: RAJ2000/DEJ2000")
+                        logging.info("Selected co-ordinates from: RAJ2000/DEJ2000")
                 except:
                     try: # for data from files
                         newra=sourcedata['RA']
                         newdec=sourcedata['Dec']
                         if (verbosity>=98):
-                            print ("Selected co-ordinates from: RA,Dec")
+                            logging.info("Selected co-ordinates from: RA,Dec")
                     except: # Needed for Morel
                         try:
                             newra=sourcedata['_RA']
                             newdec=sourcedata['_DE']
                             if (verbosity>=98):
-                                print ("Selected co-ordinates from: _RA/_DE")
+                                logging.info("Selected co-ordinates from: _RA/_DE")
                         except: # Needed for IRAS
                             try:
                                 # Extract
@@ -843,7 +843,7 @@ def extract_ra_dec(sourcedata):
                                 newra=coords.ra.deg
                                 newdec=coords.dec.deg
                                 if (verbosity>=98):
-                                    print ("Selected co-ordinates from: RA1950/DE1950")
+                                    logging.info("Selected co-ordinates from: RA1950/DE1950")
                             except: # Needed for really old catalogues
                                 try:
                                     # Extract
@@ -858,26 +858,26 @@ def extract_ra_dec(sourcedata):
                                     newra=coords.ra.deg
                                     newdec=coords.dec.deg
                                     if (verbosity>=98):
-                                        print ("Selected co-ordinates from: RA1950/DE1950")
+                                        logging.info("Selected co-ordinates from: RA1950/DE1950")
                                 except: # Needed for Skymapper
                                     try:
                                         newra=sourcedata['RAICRS']
                                         newdec=sourcedata['DEICRS']
                                         if (verbosity>=98):
-                                            print ("Selected co-ordinates from: RAICRS,DEICRS")
+                                            logging.info("Selected co-ordinates from: RAICRS,DEICRS")
                                     except: # Resort to pre-computed values, which undoes PM correction
                                         try:
                                             newra=sourcedata['_RAJ2000']
                                             newdec=sourcedata['_DEJ2000']
                                             if (verbosity>=98):
-                                                print ("Selected co-ordinates from: _RAJ2000/_DEJ2000")
+                                                logging.info("Selected co-ordinates from: _RAJ2000/_DEJ2000")
                                         except:
                                             print_fail ("Failed to find a co-ordinate system")
     # Convert sexagesimal to degrees
     if ((newra.dtype!="float64") & (newra.dtype!="float32") & (newra.dtype!="float")):
         if (verbosity>=99):
             print_warn ("Converting from sexagesimal!")
-            print (newra[0],newra.dtype)
+            logging.info(newra[0],newra.dtype)
         newra=Angle(np.char.add(newra,np.array(["hours"]))).degree
         newdec=Angle(np.char.add(newdec,np.array(["degrees"]))).degree
 
@@ -895,7 +895,7 @@ def extract_ra_dec_pm(sourcedata):
     pmraerrcol=np.array2string(pyssedsetupdata[pyssedsetupdata[:,0]=="PMRAErrColID",1])[2:-2]
     pmdecerrcol=np.array2string(pyssedsetupdata[pyssedsetupdata[:,0]=="PMDecErrColID",1])[2:-2]
     if (verbosity>95):
-        print ("PM columns:",pmracol,pmdeccol,pmraerrcol,pmdecerrcol)
+        logging.info("PM columns: %s %s %s %s",pmracol,pmdeccol,pmraerrcol,pmdecerrcol)
         print(np.array2string(pyssedsetupdata[pyssedsetupdata[:,0]=="PMRAColID",1]))
         print(np.array2string(pyssedsetupdata[pyssedsetupdata[:,0]=="PMDecColID",1]))
         print(np.array2string(pyssedsetupdata[pyssedsetupdata[:,0]=="PMRAErrColID",1]))
@@ -903,7 +903,7 @@ def extract_ra_dec_pm(sourcedata):
 
     try:
         if (verbosity>95):
-            print ("Trying Gaia...")
+            logging.info("Trying Gaia...")
         sourcetype="Gaia"
         sourcera=(sourcedata['ra']).astype(float)
         sourcedec=(sourcedata['dec']).astype(float)
@@ -921,7 +921,7 @@ def extract_ra_dec_pm(sourcedata):
             sourcepmdecerr=0.
         sourceepoch=float(pyssedsetupdata[pyssedsetupdata[:,0]=="GaiaEpoch",1][0])
         if (verbosity>95):
-            print ("Gaia data found.")
+            logging.info("Gaia data found.")
     except:
         # If that fails, try alternative Gaia format
         try:
@@ -946,12 +946,12 @@ def extract_ra_dec_pm(sourcedata):
                 sourcepmdecerr=0.
             sourceepoch=float(pyssedsetupdata[pyssedsetupdata[:,0]=="GaiaEpoch",1][0])
             if (verbosity>95):
-                print ("Gaia data found (alt).")
+                logging.info("Gaia data found (alt).")
         except:
             # If that fails, try Hipparcos
             try:
                 if (verbosity>95):
-                    print ("Trying Hipparcos...")
+                    logging.warning("Trying Hipparcos...")
                 sourcetype="Hipparcos"
                 sourcera=(sourcedata['RArad']).astype(float)
                 sourcedec=(sourcedata['DErad']).astype(float)
@@ -963,12 +963,12 @@ def extract_ra_dec_pm(sourcedata):
                 sourcepmdecerr=(sourcedata['e_pmDE']).astype(float)
                 sourceepoch=1991.25
                 if (verbosity>95):
-                    print ("Hipparcos data found.")
+                    logging.info("Hipparcos data found.")
             except:
                 # If that fails, try user-specified file-type data
                 try:
                     if (verbosity>95):
-                        print ("Trying user-specified data...")
+                        logging.info("Trying user-specified data...")
                     sourcetype="User"
                     # Allow different capitalisations
                     try: # Sexagesimal
@@ -1030,17 +1030,17 @@ def extract_ra_dec_pm(sourcedata):
                         sourcepmdecerr=zero
                     sourceepoch=2000.
                     if (verbosity>95):
-                        print ("User data parsed.")
+                        logging.info("User data parsed.")
                 except:
                     if (verbosity>95):
-                        print ("Resorting to pre-computed ICRS co-ordinates...")
+                        logging.info("Resorting to pre-computed ICRS co-ordinates...")
                     sourcetype="Other"
                     try:
                         sourcera=(sourcedata['_RAJ2000']).astype(float)
                         sourcedec=(sourcedata['_DEJ2000']).astype(float)
                     except:
-                        print_fail ("Failure to extract co-ordinates from data")
-                        print ("Available columns",sourcedata.dtype.names)
+                        logging.warning("Failure to extract co-ordinates from data")
+                        logging.info("Available columns: %s",sourcedata.dtype.names)
                         raise
                     #try: # if single object, expand array
                     #    foo=len(sourcera)
@@ -1082,7 +1082,7 @@ def extract_ra_dec_pm(sourcedata):
                             sourcepmdecerr=0.
                     sourceepoch=2000.
                     if (verbosity>95):
-                        print ("Other data parsed.")
+                        logging.info("Other data parsed.")
 
     sourcepmra=np.nan_to_num(sourcepmra,copy=False,nan=0.0,posinf=0.0,neginf=0.0)
     sourcepmdec=np.nan_to_num(sourcepmdec,copy=False,nan=0.0,posinf=0.0,neginf=0.0)
@@ -1109,14 +1109,14 @@ def query_gaia_coords(ra,dec):
         try:
             result=Gaia.query_object_async(coordinate=coord, width=width, height=height, verbose=False)
             if (verbosity > 95):
-                print ("Gaia.query_object_async returned:")
-                print (result)
+                logging.info("Gaia.query_object_async returned:")
+                logging.info(result)
             # Trap null result
             try:
                 dr3_obj=result['SOURCE_ID'][0]
                 if (verbosity > 95):
-                    print ("DR3_obj:")
-                    print (dr3_obj)
+                    logging.info("DR3_obj:")
+                    logging.info(dr3_obj)
                 break
             except:
                 dr3_obj=0
@@ -1141,9 +1141,9 @@ def get_vizier_single(cmdparams,sourcedata):
 
     errmsg=""
     if (verbosity>90):
-        print ("Initialising data queries...")
+        logging.info("Initialising data queries...")
     if (speedtest):
-        print ("get_vizier_single:",datetime.now()-globaltime,"s")
+        logging.info("get_vizier_single:",datetime.now()-globaltime,"s")
     # Get from files for catalogues and filters
     catdata=get_catalogue_list()
     filtdata=get_filter_list()
@@ -1160,7 +1160,7 @@ def get_vizier_single(cmdparams,sourcedata):
     try:
     #if (sourcedata.dtype=="float64"):
         if (verbosity>60):
-            print ("Trying to get VizieR data from a set of co-ordinates...")
+            logging.info("Trying to get VizieR data from a set of co-ordinates...")
         sourcetype="User"
         sourcera=sourcedata[0]*15.+sourcedata[1]/4.+sourcedata[2]/240.
         sourcedec=np.sign(sourcedata[3])*(np.abs(sourcedata[3])+sourcedata[4]/60.+sourcedata[5]/3600.)
@@ -1174,9 +1174,9 @@ def get_vizier_single(cmdparams,sourcedata):
     except:
     #else:
         if (verbosity>60):
-            print ("Trying to get VizieR data from a list of objects...")
+            logging.info("Trying to get VizieR data from a list of objects...")
         if (verbosity>70):
-            print (sourcedata[0])
+            logging.info(sourcedata[0])
         # Get the parameters from the source data
         sourcetype,ra,dec,raerr,decerr,pmra,pmdec,pmraerr,pmdecerr,sourceepoch=extract_ra_dec_pm(sourcedata[0])
         # Now extract the first source
@@ -1194,14 +1194,14 @@ def get_vizier_single(cmdparams,sourcedata):
     ancillary[2]=('PMRA',sourcetype,'PMRA',sourcepmra,sourcepmraerr,0,True)
     ancillary[3]=('PMDec',sourcetype,'PMDec',sourcepmdec,sourcepmdecerr,0,True)
     if (verbosity>70):
-        print ("SED search astrometry:")
-        print ("Primary RA:",sourcera,"+/-",sourceraerr)
-        print ("Primary Dec:",sourcedec,"+/-",sourcedecerr)
-        print ("Primary PMRA:",sourcepmra,"+/-",sourcepmraerr)
-        print ("Primary PMDec:",sourcepmdec,"+/-",sourcepmdecerr)
-        print ("Primary epoch:",sourceepoch)
+        logging.info("SED search astrometry:")
+        logging.info("Primary RA:",sourcera,"+/-",sourceraerr)
+        logging.info("Primary Dec:",sourcedec,"+/-",sourcedecerr)
+        logging.info("Primary PMRA:",sourcepmra,"+/-",sourcepmraerr)
+        logging.info("Primary PMDec:",sourcepmdec,"+/-",sourcepmdecerr)
+        logging.info("Primary epoch:",sourceepoch)
     
-    #print (sourcedata.dtype.names)
+    #logging.info(sourcedata.dtype.names)
 
     # Set the default photometric error and get the PM astrometry error controls
     defaulterr=float(pyssedsetupdata[pyssedsetupdata[:,0]=="DefaultError",1][0])
@@ -1214,11 +1214,11 @@ def get_vizier_single(cmdparams,sourcedata):
     sed=np.zeros((len(filtdata)),dtype=[('catname','<U20'),('objid','<U32'),('ra','f4'),('dec','f4'),('modelra','f4'),('modeldec','f4'),('svoname','U32'),('filter','U10'),('wavel','f4'),('dw','f4'),('mag','f4'),('magerr','f4'),('flux','f4'),('ferr','f4'),('dered','f4'),('derederr','f4'),('model','f4'),('mask','bool')])
     nfsuccess=0
     if (speedtest):
-        print ("get_vizier_single, start of catalogue loop:",datetime.now()-globaltime,"s")
+        logging.info("get_vizier_single, start of catalogue loop: %s",datetime.now()-globaltime,"s")
     for catalogue in catalogues:
         server=catdata[catdata['catname']==catalogue]['server']
         if (verbosity>60):
-            print ("Catalogue:",catalogue,"on server",server)
+            logging.info("Catalogue: %s",catalogue,"on server %s",server)
         if (server=="Gaia"):
             # Assuming this is a Gaia source, extract the data
             if (sourcetype=="Gaia"):
@@ -1265,25 +1265,25 @@ def get_vizier_single(cmdparams,sourcedata):
                     querystart=datetime.now()
                 vizier_data=query_vizier(cat=str(catdata[catdata['catname']==catalogue]['cdstable'])[2:-2],ra=ra,dec=dec,r=matchr,method="cone")
                 if (speedtest):
-                    print ("[ get_vizier_single -",catalogue," query:",datetime.now()-querystart,"]")
+                    logging.info("[ get_vizier_single -% %s",catalogue," query:% %s",datetime.now()-querystart,"]")
 
                 if (verbosity>70):
-                    print (vizier_data)
+                    logging.info(vizier_data)
 
                 # Only proceed if VizieR has returned some data
                 if (vizier_data is not None and len(vizier_data)>0):
                     if (verbosity>80):
-                        print (vizier_data[0])
+                        logging.info(vizier_data[0])
                     # Get RA and Dec from various columns in order of preference
                     newra,newdec=extract_ra_dec(vizier_data[0])
                     newra=reducto(newra) # Only take the first entry
                     newdec=reducto(newdec)
                     if (verbosity>98):
-                        print ("Source astrometry:")
-                        print ("Source epoch:",float(catdata[catdata['catname']==catalogue]['epoch']))
-                        print ("Source RA:",ra,"->",newra,"(",(ra-newra)*3600.,"arcsec)")
-                        print ("Source Dec:",dec,"->",newdec,"(",(dec-newdec)*3600.,"arcsec)")
-                        print ("Search radius:",matchr,"arcsec")
+                        logging.info("Source astrometry:")
+                        logging.info("Source epoch: %s",float(catdata[catdata['catname']==catalogue]['epoch']))
+                        logging.info("Source RA: %s",ra,"-> $s",newra,"(%s",(ra-newra)*3600.,"arcsec)")
+                        logging.info("Source Dec: %s",dec,"-> %s",newdec,"(%s",(dec-newdec)*3600.,"arcsec)")
+                        logging.info("Search radius: %s",matchr,"arcsec")
             else: # Data from file
                 photfile=str(catdata[catdata['catname']==catalogue]['cdstable'])[2:-2]
                 matchr=float(catdata[catdata['catname']==catalogue]['matchr'][0])
@@ -1302,8 +1302,8 @@ def get_vizier_single(cmdparams,sourcedata):
                 else:
                     vizier_data=[]
                 if (verbosity>60):
-                    print ("CATALOGUE = ",catalogue,"; RA,DEC =",ra,dec)
-                    print ("Vizier data:",vizier_data)
+                    logging.info("CATALOGUE = %s",catalogue,"; RA,DEC = %s %s",ra,dec)
+                    logging.info("Vizier data: %s",vizier_data)
             if (len(vizier_data)>0): # If any data exists
                 svokeys=filtdata[filtdata['catname']==catalogue]['svoname']
                 # Get identifier in catalgoue
@@ -1316,7 +1316,7 @@ def get_vizier_single(cmdparams,sourcedata):
                     except:
                         catid="NotRecognised"
                 if (verbosity>90):
-                    print ("Object:",catid,"(from column",idcol,")")
+                    print ("Object: %s",catid,"(from column %s",idcol,")")
                 # Identify magnitude and error columns
                 magkeys=filtdata[filtdata['catname']==catalogue]['filtname']
                 #testdata=vizier_data[0]
@@ -1355,19 +1355,19 @@ def get_vizier_single(cmdparams,sourcedata):
                             sed[nfsuccess]=(catalogue,catid,(newra-sourcera)*3600.,(newdec-sourcedec)*3600.,(ra-sourcera)*3600.,(dec-sourcedec)*3600.,svokey,fdata['filtname'],wavel,dw,mag,magerr,flux,ferr,0,0,0,mask)
                             nfsuccess+=1
     if (speedtest):
-        print ("get_vizier_single, end of catalogue loop:",datetime.now()-globaltime,"s")
+        logging.info("get_vizier_single, end of catalogue loop: %s",datetime.now()-globaltime,"s")
 
     # If there is no error in flux, use default error
     sed[sed['ferr']==0]['ferr']==sed[sed['ferr']==0]['flux']*defaulterr
 
     # Get ancillary information
     if (verbosity>50):
-        print ("Getting ancillary data...")
+        logging.info("Getting ancillary data...")
     if (speedtest):
-        print ("get_vizier_single, start of ancillary data loop:",datetime.now()-globaltime,"s")
+        logging.info("get_vizier_single, start of ancillary data loop: %s",datetime.now()-globaltime,"s")
     for i in np.arange(np.size(ancillary_queries)):
         if (verbosity>60):
-            print (ancillary_queries[i])
+            logging.info(ancillary_queries[i])
         if ((i>0) & (ancillary_queries[i-1]['cdstable']==ancillary_queries[i]['cdstable'])):
             uselastdata=True # saves querying VizieR if using the same table
         else:
@@ -1385,8 +1385,8 @@ def get_vizier_single(cmdparams,sourcedata):
                 vizier_data=query_vizier(cat=str(ancillary_queries[i]['cdstable']),ra=ra,dec=dec,r=matchr,method="cone")
 
             if (verbosity>70):
-                print ("CATALOGUE = ",str(ancillary_queries[i]['cdstable']),"; RA,DEC =",ra,dec)
-                print (vizier_data)
+                print ("CATALOGUE = %s",str(ancillary_queries[i]['cdstable']),"; RA,DEC = %s %s",ra,dec)
+                logging.info(vizier_data)
 
             # Only proceed if VizieR has returned some data
             try:
@@ -1402,13 +1402,13 @@ def get_vizier_single(cmdparams,sourcedata):
                     vizier_data=query_vizier(cat=str(ancillary_queries[i]['cdstable']),ra=ra,dec=dec,r=matchr,method="cone")
                 except TypeError:
                     print_fail ("Repeated bad data from VizieR. Aborting this entry.")
-                    print ("CATALOGUE = ",str(ancillary_queries[i]['cdstable']),"; RA,DEC =",ra,dec)
+                    print ("CATALOGUE = %s",str(ancillary_queries[i]['cdstable']),"; RA,DEC = %s %s",ra,dec)
                 datalen=0
             if (datalen>0):
                 if (verbosity>80):
-                    print (vizier_data[0])
+                    logging.info(vizier_data[0])
                 if (verbosity>98):
-                    print (vizier_data[0].keys())
+                    logging.info(vizier_data[0].keys())
                 # Get RA and Dec from various columns in order of preference
                 newra,newdec=extract_ra_dec(vizier_data[0])
                 newra=reducto(newra) # Only take the first entry
@@ -1433,7 +1433,7 @@ def get_vizier_single(cmdparams,sourcedata):
                 np.loadtxt("This source of data is") # ...not found
             except:
                 print_fail ("ERROR! Source of data unrecognised!")
-                print ("Received:",ancillary_queries[i]['server'],"; should be Vizier or File")
+                print ("Received: %s",ancillary_queries[i]['server'],"; should be Vizier or File")
                 raise
         if (datalen>0):
             reasons=rejectdata[(rejectdata['catname']==ancillary_queries[i]['catname']) & ((rejectdata['filtname']==ancillary_queries[i]['colname']) | (rejectdata['filtname']=="All")) & (rejectdata['rejcat']=="Same") & (rejectdata['rejcol']=="Same")]
@@ -1455,12 +1455,12 @@ def get_vizier_single(cmdparams,sourcedata):
                     ancillary[i+5]=(ancillary_queries[i]['paramname'],ancillary_queries[i]['catname'],ancillary_queries[i]['colname'],vizier_data[0][ancillary_queries[i]['colname']][0],err,ancillary_queries[i]['priority'],mask)
             except KeyError:
                 print_fail ("Key error: entry in ancillary request file does not match VizieR table")
-                print ("Query:",ancillary_queries[i])
-                print ("Available keys:",vizier_data[0].dtype.names)
+                logging.info("Query: %s",ancillary_queries[i])
+                logging.info("Available keys: %s",vizier_data[0].dtype.names)
                 print_fail ("Field in Query must match field in Available. Edit ancillary queries.")
                 raise
     if (speedtest):
-        print ("get_vizier_single, end of ancillary data loop:",datetime.now()-globaltime,"s")
+        logging.info("get_vizier_single, end of ancillary data loop: %s",datetime.now()-globaltime,"s")
 
     # Apply additional rejection criteria
     # -----------------------------------
@@ -1474,16 +1474,16 @@ def get_vizier_single(cmdparams,sourcedata):
 
     # Apply rejection criteria spanning multiple catalogues
     if (verbosity>60):
-        print ("Rejecting data based on flags...")
+        logging.info("Rejecting data based on flags...")
     try:
         reasons=rejectdata[(rejectdata['rejcat']!="Same") & (rejectdata['position']<0)]
     except:
         reasons=[]
     if (verbosity>80):
-        print (len(reasons),"reasons identified")
+        logging.info(len(reasons),"reasons identified")
 
     if (speedtest):
-        print ("get_vizier_single, start of rejection criteria loop:",datetime.now()-globaltime,"s")
+        print ("get_vizier_single, start of rejection criteria loop: %s",datetime.now()-globaltime,"s")
     for i in np.arange(len(reasons)):
 
         if (reasons[i]['column']!="anc"):
@@ -1492,7 +1492,7 @@ def get_vizier_single(cmdparams,sourcedata):
             testdata=sed[(sed['catname']==reasons[i]['rejcat']) & (sed['filter']==reasons[i]['rejcol'])][reasons[i]['column']]
             n=(sed['catname']==reasons[i]['catname']) & (sed['filter']==reasons[i]['filtname'])
             #if (verbosity>90):
-            #    print (reasons[i],len(testdata),len(n))
+            #    logging.info(reasons[i],len(testdata),len(n))
             compmag=sed[n]['mag']
             compflux=sed[n]['flux']
             logic=reasons[i]['logical']
