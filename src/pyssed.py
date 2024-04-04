@@ -9,6 +9,27 @@
 # python3 pyssed.py <search type> <target> <fit type> [fit parameters] [setup file]
 # Run as "python3 pyssed.py" to display options.
 
+
+
+
+import os, logging
+from datetime import datetime
+
+
+logs_directory = "logs"
+if not os.path.exists(logs_directory):
+    os.makedirs(logs_directory)
+
+logfile_name = os.path.join(logs_directory, datetime.now().strftime('PySSED-%d%m%Y-%H%M%S.log'))
+logging.basicConfig(filename=logfile_name,level=logging.DEBUG)
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+logging.getLogger('').addHandler(console)
+
+
+
+
+
 # =============================================================================
 # START-UP IMPORTS
 # =============================================================================
@@ -20,7 +41,7 @@ try:
     if (speedtest):
         starttime=datetime.now()
         globaltime=starttime
-        print ("start:",datetime.now())
+        logging.info("start:",datetime.now())
     from sys import argv                        # Allows command-line arguments
     from sys import exit                        # Allows graceful quitting
     from sys import exc_info                    # Allows graceful error trapping
@@ -32,7 +53,7 @@ try:
     import tracemalloc                          # Required for memory issues
     tracemalloc.start()
     if (speedtest):
-        print ("sys:",datetime.now()-starttime,"s")
+        print("sys:",datetime.now()-starttime,"s")
     # Astroquery takes a long time - do this first
     from astroquery.simbad import Simbad        # Allow SIMBAD queries
     from astroquery.vizier import Vizier        # Allow VizieR queries
@@ -40,7 +61,7 @@ try:
 #    from astroquery.utils import TableList      # Encode data from files
     Gaia.MAIN_GAIA_TABLE = "gaiadr3.gaia_source"
     if (speedtest):
-        print ("astroquery:",datetime.now()-starttime,"s")
+        print("astroquery:",datetime.now()-starttime,"s")
     import numpy as np                          # Required for numerical processing
     import numpy.lib.recfunctions as rfn        # [For consistency with Visualiser]
     if (speedtest):
@@ -89,23 +110,23 @@ try:
     from gtomo.sda.load_cube import load_cube   # G-Tomo extinction correction
 
 except Exception as e:
-    print ("PySSED! Problem importing modules. Additional information:")
-    print ("-----------------------------------------------------")
-    print ("The following modules are REQUIRED:")
-    print ("   sys numpy scipy astropy pandas itertools")
-    print ("   matplotlib mpl_toolkits wget astroquery")
-    print ("The following modules are REQUIRED for some compoents")
-    print ("   dust_extinction - for any reddening correction")
-    #print ("   dustmaps - for 2D/3D dust extinction")
-    #print ("   beast - for full Bayesian fits")
-    print ("   gtomo - an EXPLORE package for dereddening [included]")
-    print ("   h5py - file reader to read GTomo files")
-    print ("The following modules are OPTIONAL:")
-    print ("   datetime - to correctly display timing information")
-    print ("   time - to correctly wait for server downtime")
-    print ("PySSED will try to valiantly soldier on regardless...")
-    print ("-----------------------------------------------------")
-    print ("Error information:")
+    logging.critical("PySSED! Problem importing modules. Additional information:")
+    logging.critical("-----------------------------------------------------")
+    logging.critical("The following modules are REQUIRED:")
+    logging.critical("   sys numpy scipy astropy pandas itertools")
+    logging.critical("   matplotlib mpl_toolkits wget astroquery")
+    logging.critical("The following modules are REQUIRED for some compoents")
+    logging.critical("   dust_extinction - for any reddening correction")
+    #logging.critical("   dustmaps - for 2D/3D dust extinction")
+    #logging.critical("   beast - for full Bayesian fits")
+    logging.critical("   gtomo - an EXPLORE package for dereddening [included]")
+    logging.critical("   h5py - file reader to read GTomo files")
+    logging.critical("The following modules are OPTIONAL:")
+    logging.critical("   datetime - to correctly display timing information")
+    logging.critical("   time - to correctly wait for server downtime")
+    logging.critical("PySSED will try to valiantly soldier on regardless...")
+    logging.critical("-----------------------------------------------------")
+    logging.critical("Error information:")
     print_fail (exc_info())
 
 if (speedtest):
